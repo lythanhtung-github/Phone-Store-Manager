@@ -14,6 +14,8 @@ public interface IUserDAO {
 
     User selectUserByEmail(String emailStr);
 
+    List<User> selectAllUsersPaggingFilter(int offset, int noOfRecords, String q, int idCountry);
+
     List<User> selectAllUser();
 
     boolean deleteUser(String id);
@@ -21,4 +23,6 @@ public interface IUserDAO {
     boolean updateUser(User user);
 
     List<User> searchUser(String searchStr);
+
+    public int getNoOfRecords();
 }

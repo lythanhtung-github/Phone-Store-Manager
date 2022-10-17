@@ -65,32 +65,30 @@
                         <div class="card-header">Danh sách nhân viên</div>
                         <div id="table4_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                             <div class="row be-datatable-header">
-                                <div class="col-sm-6">
-                                    <div class="dataTables_length" id="table4_length">
-                                        <label>Show
-                                            <select name="table4_length" aria-controls="table4"
-                                                    class="custom-select custom-select-sm form-control form-control-sm">
-                                                <option value="10">10</option>
-                                                <option value="25">25</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                            </select> entries</label></div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <form action="/user?action=search" method="post">
-                                        <div id="table4_filter" class="dataTables_filter" style="display: flex">
-                                            <input type="search"
-                                                   class="form-control form-control-sm"
-                                                   placeholder=""
-                                                   aria-controls="table4"
-                                                   name="inputSearch"/>
-                                            <button type="submit" class="btn btn-space btn-primary"
-                                                    style="margin: auto 0">
-                                                <i class="icon icon-left mdi mdi-search"></i>
-                                            </button>
+                                <form action="/user" method="get" style="display: flex;" class="col-12">
+
+                                    <div class="col-sm-12" style="display: flex; justify-content: flex-end;">
+                                        <div>
+                                            <input class="form-control" type="text" placeholder="Tìm kiếm..." name="q"
+                                                   value="${requestScope.q}">
                                         </div>
-                                    </form>
-                                </div>
+                                        <div>
+                                            <select name="roleId" class="form-control">
+                                                <option value="-1">All</option>
+                                                <c:forEach items="${applicationScope.listRole}" var="role">
+                                                    <option
+                                                            <c:if test="${requestScope.roleId == role.getId()}">selected</c:if>
+                                                            value="${role.getId()}">${role.getType()}
+                                                    </option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <input type="submit" value="Tìm kiếm"
+                                                   class="form-control btn-primary"/>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         <div class="card-body">
@@ -111,13 +109,13 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach var="user" items="${applicationScope.listUser}">
+                                <c:forEach var="user" items="${requestScope.listUser}">
                                     <tr class="odd gradeX">
                                         <td class="text-center">
                                                 ${user.getId()}
                                         </td>
                                         <td class="text-start">
-                                                ${user.getFullName()}
+                                            <a href="/user?action=view&id=${user.getId()}" class="link-info"> ${user.getFullName()}</a>
                                         </td>
                                         <div style="display: none">
                                             <c:set var="dateTimeString" value="${user.getBirthDay()}"/>
@@ -127,7 +125,6 @@
                                         </div>
                                         <td class="text-center">
                                             <fmt:formatDate value="${parsedDatetime}" pattern="dd-MM-yyyy"/>
-                                                <%--                        ${user.getBirthDay()}--%>
                                         </td>
                                         <td class="text-end">
                                                 ${user.getPhoneNumber()}
@@ -178,49 +175,40 @@
                             </table>
                         </div>
                         <div class="row be-datatable-footer">
-                            <div class="col-sm-12">
-                                <div class="dataTables_paginate paging_simple_numbers" id="table1_paginate">
-                                    <ul class="pagination">
-                                        <li class="paginate_button page-item previous disabled" id="table1_previous">
-                                            <a href="#" aria-controls="table1" data-dt-idx="0" tabindex="0"
+                            <div>
+                                <ul class="pagination pagination-split justify-content-end">
+                                    <c:if test="${currentPage != 1}">
+                                        <li class="page-item disabled">
+                                            <a href="/user?page=${currentPage - 1}&q=${requestScope.q}&roleId=${requestScope.roleId}"
                                                class="page-link">
-                                                Previous
+                                                <span class="mdi mdi-chevron-left"></span>
                                             </a>
                                         </li>
-                                        <li class="paginate_button page-item active">
-                                            <a href="#" aria-controls="table1" data-dt-idx="1" tabindex="0"
+                                    </c:if>
+                                    <c:forEach begin="1" end="${noOfPages}" var="i">
+                                        <c:choose>
+                                            <c:when test="${currentPage eq i}">
+                                                <li class="page-item active">
+                                                    <a class="page-link">${i}</a>
+                                                </li>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <li class="page-item">
+                                                    <a href="/user?page=${i}&q=${requestScope.q}&roleId=${requestScope.roleId}"
+                                                       class="page-link">${i}</a>
+                                                </li>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                    <c:if test="${currentPage lt noOfPages}">
+                                        <li class="page-item">
+                                            <a href="/user?page=${currentPage + 1}&q=${requestScope.q}&idcategory=${requestScope.idcountry}"
                                                class="page-link">
-                                                1
+                                                <span class="mdi mdi-chevron-right"></span>
                                             </a>
                                         </li>
-                                        <li class="paginate_button page-item ">
-                                            <a href="#" aria-controls="table1" data-dt-idx="2" tabindex="0"
-                                               class="page-link">
-                                                2
-                                            </a>
-                                        </li>
-                                        <li class="paginate_button page-item disabled" id="table1_ellipsis">
-                                            <a href="#" aria-controls="table1" data-dt-idx="3" tabindex="0"
-                                               class="page-link">
-                                                …
-                                            </a>
-                                        </li>
-                                        <li class="paginate_button page-item ">
-                                            <button style="border:none"><a href="#" aria-controls="table1"
-                                                                           data-dt-idx="4" tabindex="0"
-                                                                           class="page-link">
-                                                6
-                                            </a></button>
-
-                                        </li>
-                                        <li class="paginate_button page-item next" id="table1_next">
-                                            <a href="#" aria-controls="table1" data-dt-idx="5" tabindex="0"
-                                               class="page-link">
-                                                Next
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                    </c:if>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -228,7 +216,6 @@
             </div>
         </div>
     </div>
-
     <!--content-->
 </div>
 

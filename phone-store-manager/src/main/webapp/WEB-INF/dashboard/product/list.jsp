@@ -109,42 +109,42 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach var="user" items="${applicationScope.listProduct}">
+                                <c:forEach var="product" items="${applicationScope.listProduct}">
                                     <tr class="odd gradeX">
-                                        <td class="text-center">${user.getId()}</td>
-                                        <td class="text-start">${user.getName()}</td>
+                                        <td class="text-center">${product.getId()}</td>
+                                        <td class="text-start">${product.getName()}</td>
                                         <td class="text-end">
                                             <fmt:formatNumber type="number" maxFractionDigits="3"
-                                                              value="${user.getPrice()}"/>
+                                                              value="${product.getPrice()}"/>
                                         </td>
                                         <td class="text-end">
-                                                ${user.getQuantity()}
+                                                ${product.getQuantity()}
                                         </td>
                                         <td class="text-center">
-                                                ${user.getDescription()}
+                                                ${product.getDescription()}
                                         </td>
                                         <td class="text-center">
-                                            <img style="width:60px" src="${user.getImage()}"
+                                            <img style="width:60px" src="${product.getImage()}"
                                                  alt="Product image">
                                         </td>
                                         <td class="text-center">
-                                                ${user.getCreatedTime()}
+                                                ${product.getCreatedTime()}
                                         </td>
                                         <td class="text-center">
                                             <c:choose>
-                                                <c:when test="${user.getUpdatedTime()==null}">
+                                                <c:when test="${product.getUpdatedTime()==null}">
                                                     <span>Chưa cập nhật</span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span>${user.getUpdatedTime()}</span>
+                                                    <span>${product .getUpdatedTime()}</span>
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
                                         <td class="text-center">
-                                            <a href="/product?action=edit&id=${user.getId()}" type="button" class="btn btn-primary ">
+                                            <a href="/product?action=edit&id=${product.getId()}" type="button" class="btn btn-primary ">
                                                 <span class="mdi mdi-edit"></span>
                                             </a>
-                                            <a href="/product?action=delete&id=${user.getId()}"
+                                            <a href="/product?action=delete&id=${product.getId()}"
                                                type="button" class="btn btn-danger">
                                                 <span class="mdi mdi-delete"></span>
                                             </a>

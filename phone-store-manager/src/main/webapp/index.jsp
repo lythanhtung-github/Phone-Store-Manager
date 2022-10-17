@@ -4,7 +4,7 @@
 
 <head>
     <!-- link-head -->
-    <jsp:include page="/layout/link-head.jsp"></jsp:include>
+        <jsp:include page="/layout/link-head.jsp"></jsp:include>
     <!-- link-head -->
 </head>
 
@@ -94,7 +94,7 @@
                                     <a class="dropdown-item" href="#">Thống kê nhân viên</a>
                                 </div>
                             </div>
-                            <div class="title">Danh sách nhân viên</div>
+                            <div class="title">Nhân viên tiêu biểu</div>
                         </div>
                         <div class="card-body table-responsive">
                             <table class="table table-striped table-hover">
@@ -134,7 +134,7 @@
                                     <a class="dropdown-item" href="#">Thống kê sản phẩm</a>
                                 </div>
                             </div>
-                            <div class="title">Danh sách sản phẩm</div>
+                            <div class="title">Sản phẩm hot</div>
                         </div>
                         <div class="card-body table-responsive">
                             <table class="table table-striped table-borderless">

@@ -141,7 +141,7 @@
                                     <label class="col-12 col-sm-3 col-form-label text-sm-right"></label>
                                     <button class="btn btn-space btn-success col-12 col-sm-6" type="submit"
                                             style="height: 50px; font-size: 20px">
-                                        <span class="mdi mdi-plus-square"> Chỉnh sửa sản phẩm</span>
+                                        <span class="mdi mdi-edit"> Chỉnh sửa sản phẩm</span>
                                     </button>
                                 </div>
                             </div>

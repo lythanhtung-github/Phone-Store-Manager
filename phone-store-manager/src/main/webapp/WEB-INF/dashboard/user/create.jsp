@@ -177,7 +177,7 @@
                                 <div class="form-group row">
                                     <img id="imageProduct"
                                          src="https://png.pngtree.com/png-clipart/20190904/original/pngtree-hand-drawn-flat-wind-user-avatar-icon-png-image_4492039.jpg "
-                                         alt="">
+                                         alt="user image">
                                 </div>
                             </div>
                         </form>
