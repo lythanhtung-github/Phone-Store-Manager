@@ -1,5 +1,6 @@
-package dao;
+package dao.impl;
 
+import dao.IRoleDAO;
 import model.Role;
 import utils.AppUtils;
 

@@ -21,7 +21,7 @@
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
                        role="button" aria-expanded="false">
                         <img src="<%=request.getParameter("userImage") %>"
-                             alt="Avatar">
+                             alt="Avatar" style ="width: 200px;">
                     </a>
                     <div class="dropdown-menu" role="menu">
                         <div class="user-info">
@@ -30,13 +30,7 @@
                             </div>
                             <div class="user-position online">Đang hoạt động</div>
                         </div>
-                        <a class="dropdown-item" href="#">
-                            <span class="icon mdi mdi-face"></span>Thông tin tài khoản
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span class="icon mdi mdi-settings"></span>Cài đặt
-                        </a>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="/login?type=logout">
                             <span class="icon mdi mdi-power"></span>Đăng xuất
                         </a>
                     </div>

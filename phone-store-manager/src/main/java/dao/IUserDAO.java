@@ -14,7 +14,7 @@ public interface IUserDAO {
 
     User selectUserByEmail(String emailStr);
 
-    List<User> selectAllUsersPaggingFilter(int offset, int noOfRecords, String q, int idCountry);
+    List<User> selectAllUsersPaggingFilter(int offset, int noOfRecords, String q, int roleId);
 
     List<User> selectAllUser();
 
@@ -25,4 +25,6 @@ public interface IUserDAO {
     List<User> searchUser(String searchStr);
 
     public int getNoOfRecords();
+
+    User selectUserByEmailAndPassword(String email, String password);
 }

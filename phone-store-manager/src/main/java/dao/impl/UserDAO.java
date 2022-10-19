@@ -1,5 +1,6 @@
-package dao;
+package dao.impl;
 
+import dao.IUserDAO;
 import model.User;
 import utils.AppUtils;
 
@@ -21,21 +22,29 @@ public class UserDAO implements IUserDAO {
     }
 
     private final ConnectionDAO connectionDAO = ConnectionDAO.getInstance();
-    private static final String INSERT_USER = " INSERT INTO user(id, full_name, birthday, phone_number, email, address, image, role_id, password, created_time) VALUE (?,?,?,?,?,?,?,?,?,?);";
-    private static final String SELECT_USER_BY_ID = "SELECT * FROM user WHERE id =?;";
-    private static final String SELECT_ALL_USERS = "SELECT * FROM user;";
-    private static final String DELETE_USER = "DELETE FROM user WHERE id = ?;";
-    private static final String UPDATE_USER = "UPDATE user SET full_name =?, birthday =?, phone_number =?, email =?, address =?, image=?, role_id=?,password=?, updated_time=? WHERE id = ?;";
-    private static final String SEARCH_USER = "{CALL search_User(?)}";
-    private static final String SELECT_USER_BY_PHONE_NUMBER = "SELECT * FROM user WHERE phone_number =?;";
-    private static final String SELECT_USER_BY_EMAIL = "SELECT * FROM user WHERE email =?;";
-
+    private static final String INSERT_USER =
+            "INSERT INTO user(id, full_name, birthday, phone_number, email, address, image, role_id, password, created_time) VALUE (?,?,?,?,?,?,?,?,?,?);";
+    private static final String SELECT_USER_BY_ID =
+            "SELECT * FROM user WHERE id =?;";
+    private static final String SELECT_ALL_USERS =
+            "SELECT * FROM user;";
+    private static final String DELETE_USER =
+            "DELETE FROM user WHERE id = ?;";
+    private static final String UPDATE_USER =
+            "UPDATE user SET full_name =?, birthday =?, phone_number =?, email =?, address =?, image=?, role_id=?,password=?, updated_time=? WHERE id = ?;";
+    private static final String SEARCH_USER =
+            "{CALL search_User(?)}";
+    private static final String SELECT_USER_BY_PHONE_NUMBER =
+            "SELECT * FROM user WHERE phone_number =?;";
+    private static final String SELECT_USER_BY_EMAIL =
+            "SELECT * FROM user WHERE email =?;";
     private static final String SELECT_ALL_USER_PAGGING_FILLTER =
             "SELECT SQL_CALC_FOUND_ROWS * FROM user WHERE (id LIKE ? OR full_name LIKE ? OR birthday LIKE ? OR phone_number LIKE ? OR email LIKE ? OR address LIKE ?) AND role_id = ? limit ?,?;";
-
     private static final String SELECT_ALL_USER_PAGGING_FILLTER_ALL =
             "SELECT SQL_CALC_FOUND_ROWS * FROM user WHERE id LIKE ? OR full_name LIKE ? OR birthday LIKE ? OR phone_number LIKE ? OR email LIKE ? OR address LIKE ? limit ?,?;";
 
+    private static final String SELECT_USER_BY_EMAIL_PASSWORD =
+            "SELECT * FROM user WHERE email = ? AND password = ?";
     private int noOfRecords;
 
     public int getNoOfRecords() {
@@ -76,23 +85,7 @@ public class UserDAO implements IUserDAO {
             ResultSet rs = preparedStatement.executeQuery();
             System.out.println(this.getClass() + " selectUser: " + preparedStatement);
             while (rs.next()) {
-                String userId = rs.getString("id");
-                String fullName = rs.getString("full_name");
-                LocalDate birthDay = AppUtils.stringToLocalDate(rs.getString("birthday"));
-                String phoneNumber = rs.getString("phone_number");
-                String email = rs.getString("email");
-                String address = rs.getString("address");
-                String image = rs.getString("image");
-                int roleId = rs.getInt("role_id");
-                String password = rs.getString("password");
-                User user = new User(userId, fullName, birthDay, phoneNumber, email, address, image, roleId, password);
-                LocalDateTime createdTime = AppUtils.stringToLocalDateTime(rs.getString("created_time"));
-                user.setCreatedTime(createdTime);
-                if (rs.getString("updated_time") != null) {
-                    LocalDateTime updatedTime = AppUtils.stringToLocalDateTime(rs.getString("updated_time"));
-                    user.setUpdatedTime(updatedTime);
-                }
-                return user;
+                return getUserFromResultSet(rs);
             }
         } catch (SQLException e) {
             AppUtils.printSQLException(e);
@@ -107,25 +100,9 @@ public class UserDAO implements IUserDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_PHONE_NUMBER);
             preparedStatement.setString(1, phoneNumberStr);
             ResultSet rs = preparedStatement.executeQuery();
-            System.out.println(this.getClass() + " selectUser: " + preparedStatement);
+            System.out.println(this.getClass() + " selectUserByPhoneNumber: " + preparedStatement);
             while (rs.next()) {
-                String userId = rs.getString("id");
-                String fullName = rs.getString("full_name");
-                LocalDate birthDay = AppUtils.stringToLocalDate(rs.getString("birthday"));
-                String phoneNumber = rs.getString("phone_number");
-                String email = rs.getString("email");
-                String address = rs.getString("address");
-                String image = rs.getString("image");
-                int roleId = rs.getInt("role_id");
-                String password = rs.getString("password");
-                User user = new User(userId, fullName, birthDay, phoneNumber, email, address, image, roleId, password);
-                LocalDateTime createdTime = AppUtils.stringToLocalDateTime(rs.getString("created_time"));
-                user.setCreatedTime(createdTime);
-                if (rs.getString("updated_time") != null) {
-                    LocalDateTime updatedTime = AppUtils.stringToLocalDateTime(rs.getString("updated_time"));
-                    user.setUpdatedTime(updatedTime);
-                }
-                return user;
+                return getUserFromResultSet(rs);
             }
         } catch (SQLException e) {
             AppUtils.printSQLException(e);
@@ -140,25 +117,9 @@ public class UserDAO implements IUserDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_EMAIL);
             preparedStatement.setString(1, emailStr);
             ResultSet rs = preparedStatement.executeQuery();
-            System.out.println(this.getClass() + " selectUser: " + preparedStatement);
+            System.out.println(this.getClass() + " selectUserByEmail: " + preparedStatement);
             while (rs.next()) {
-                String userId = rs.getString("id");
-                String fullName = rs.getString("full_name");
-                LocalDate birthDay = AppUtils.stringToLocalDate(rs.getString("birthday"));
-                String phoneNumber = rs.getString("phone_number");
-                String email = rs.getString("email");
-                String address = rs.getString("address");
-                String image = rs.getString("image");
-                int roleId = rs.getInt("role_id");
-                String password = rs.getString("password");
-                User user = new User(userId, fullName, birthDay, phoneNumber, email, address, image, roleId, password);
-                LocalDateTime createdTime = AppUtils.stringToLocalDateTime(rs.getString("created_time"));
-                user.setCreatedTime(createdTime);
-                if (rs.getString("updated_time") != null) {
-                    LocalDateTime updatedTime = AppUtils.stringToLocalDateTime(rs.getString("updated_time"));
-                    user.setUpdatedTime(updatedTime);
-                }
-                return user;
+                return getUserFromResultSet(rs);
             }
         } catch (SQLException e) {
             AppUtils.printSQLException(e);
@@ -241,7 +202,7 @@ public class UserDAO implements IUserDAO {
     @Override
     public List<User> selectAllUsersPaggingFilter(int offset, int noOfRecords, String q, int roleId) {
         List<User> userList = new ArrayList<>();
-        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement;
         try {
             Connection connection = connectionDAO.getConnection();
             if (roleId != -1) {
@@ -293,7 +254,8 @@ public class UserDAO implements IUserDAO {
         String address = rs.getString("address");
         int role = rs.getInt("role_id");
         String image = rs.getString("image");
-        User user = new User(id, fullName, birthDay, phoneNumber, email, address, image, role);
+        String password = rs.getNString("password");
+        User user = new User(id, fullName, birthDay, phoneNumber, email, address, image, role, password);
         LocalDateTime createdTime = AppUtils.stringToLocalDateTime(rs.getString("created_time"));
         user.setCreatedTime(createdTime);
         if (rs.getString("updated_time") != null) {
@@ -301,5 +263,22 @@ public class UserDAO implements IUserDAO {
             user.setUpdatedTime(updatedTime);
         }
         return user;
+    }
+
+    @Override
+    public User selectUserByEmailAndPassword(String email, String password) {
+        try (Connection connection = connectionDAO.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_EMAIL_PASSWORD)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+            ResultSet rs = preparedStatement.executeQuery();
+            System.out.println(this.getClass() + " selectUserByEmailAndPassword: " + preparedStatement);
+            while (rs.next()) {
+                return getUserFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            AppUtils.printSQLException(e);
+        }
+        return null;
     }
 }

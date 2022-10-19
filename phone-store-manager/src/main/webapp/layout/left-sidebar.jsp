@@ -11,11 +11,11 @@
             </li>
             <li class="parent"><a href="#"><i class="icon mdi mdi-face"></i><span>Tài khoản</span></a>
               <ul class="sub-menu">
-                <li><a href="#">Thông tin tài khoản</a>
+                <li><a href="/user?action=view&id=<%=request.getParameter("id") %>">Thông tin tài khoản</a>
                 </li>
-                <li><a href="#">Thay đổi thông tin</a>
+                <li><a href="/user?action=edit&id=<%=request.getParameter("id") %>">Thay đổi thông tin</a>
                 </li>
-                <li><a href="#">Đổi mật khẩu</a>
+                <li><a href="/user?action=changepass">Đổi mật khẩu</a>
                 </li>
               </ul>
             </li>
@@ -43,9 +43,7 @@
             <li class="parent"><a href="#"><i
                     class="icon mdi mdi-accounts"></i><span>Quản lý khách hàng</span></a>
               <ul class="sub-menu">
-                <li><a href="#">Danh sách khách hàng</a>
-                </li>
-                <li><a href="#">Thêm mới</a>
+                <li><a href="/customer">Danh sách khách hàng</a>
                 </li>
                 <li><a href="#"><span class="badge badge-primary float-right">New</span>Thống kê</a>
                 </li>
@@ -66,28 +64,14 @@
             <li class="parent"><a href="#"><i class="icon mdi mdi-shopping-cart"></i><span>Quản lý đơn
                       hàng</span></a>
               <ul class="sub-menu">
-                <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>Danh sách đơn
-                          hàng</span></a>
-                  <ul class="sub-menu">
-
-                    <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>Level 2</span></a>
-                      <ul class="sub-menu">
-                        <li><a href="#"><i
-                                class="icon mdi mdi-undefined"></i><span>Level</span></a>
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
+                <li><a href="/order"><span>Danh sách đơn hàng</span></a>
                 </li>
-                <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>Duyệt đơn hàng</span></a>
+                <li class="parent"><a href="#"><span>Duyệt đơn hàng</span></a>
                   <ul class="sub-menu">
 
-                    <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>Level</span></a>
-                      <ul class="sub-menu">
-                        <li><a href="#"><i
-                                class="icon mdi mdi-undefined"></i><span>Level 3</span></a>
-                        </li>
-                      </ul>
+                    <li><a href="/order?action=testship"><i class="icon mdi mdi-undefined"></i><span>Vận chuyển</span></a>
+                    </li>
+                    <li><a href="/order?action=testcomplete"><i class="icon mdi mdi-undefined"></i><span>Hoàn thành</span></a>
                     </li>
                   </ul>
                 </li>

@@ -1,6 +1,6 @@
-package dao;
+package dao.impl;
 
-import model.Role;
+import dao.IStatusDAO;
 import model.Status;
 import utils.AppUtils;
 
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatusDAO implements IStatusDAO{
+public class StatusDAO implements IStatusDAO {
 
     private static StatusDAO instance;
 

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class Order {
     private String id;
     private LocalDateTime createdTime;
-    private double grandTotal;
+    private int grandTotal;
     private int statusId;
     private String customerId;
     private String userId;
@@ -13,7 +13,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(String id, LocalDateTime createdTime, double grandTotal, int statusId, String customerId) {
+    public Order(String id, LocalDateTime createdTime, int grandTotal, int statusId, String customerId) {
         this.id = id;
         this.createdTime = createdTime;
         this.grandTotal = grandTotal;
@@ -21,7 +21,7 @@ public class Order {
         this.customerId = customerId;
     }
 
-    public Order(String id, LocalDateTime createdTime, double grandTotal, int statusId, String customerId, String userId) {
+    public Order(String id, LocalDateTime createdTime, int grandTotal, int statusId, String customerId, String userId) {
         this.id = id;
         this.createdTime = createdTime;
         this.grandTotal = grandTotal;
@@ -46,11 +46,11 @@ public class Order {
         this.createdTime = createdTime;
     }
 
-    public double getGrandTotal() {
+    public int getGrandTotal() {
         return grandTotal;
     }
 
-    public void setGrandTotal(double grandTotal) {
+    public void setGrandTotal(int grandTotal) {
         this.grandTotal = grandTotal;
     }
 

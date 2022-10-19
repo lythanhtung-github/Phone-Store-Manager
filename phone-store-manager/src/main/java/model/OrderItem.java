@@ -1,16 +1,23 @@
 package model;
 
 public class OrderItem {
-    private String id;
+    private int id;
     private String productId;
-    private double price;
+    private int price;
     private int quantity;
     private String orderId;
 
     public OrderItem() {
     }
 
-    public OrderItem(String id, String productId, double price, int quantity, String orderId) {
+    public OrderItem(String productId, int price, int quantity, String orderId) {
+        this.productId = productId;
+        this.price = price;
+        this.quantity = quantity;
+        this.orderId = orderId;
+    }
+
+    public OrderItem(int id, String productId, int price, int quantity, String orderId) {
         this.id = id;
         this.productId = productId;
         this.price = price;
@@ -18,11 +25,11 @@ public class OrderItem {
         this.orderId = orderId;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -34,11 +41,11 @@ public class OrderItem {
         this.productId = productId;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

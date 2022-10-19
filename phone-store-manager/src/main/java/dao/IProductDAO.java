@@ -5,6 +5,8 @@ import model.Product;
 import java.util.List;
 
 public interface IProductDAO {
+    void setUpdateProductQuantity(int quantity, String id);
+
     void insertProduct(Product product);
 
     Product selectProduct(String id);

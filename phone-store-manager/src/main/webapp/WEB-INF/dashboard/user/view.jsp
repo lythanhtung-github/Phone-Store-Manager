@@ -14,12 +14,14 @@
     <!-- nav-header -->
     <jsp:include page="/layout/nav-header.jsp">
         <jsp:param name="page" value="QUẢN LÝ NHÂN VIÊN"/>
-        <jsp:param name="userFulName" value="Lý Thanh Tùng"/>
-        <jsp:param name="userImage" value="https://cdn-icons-png.flaticon.com/512/61/61205.png"/>
+        <jsp:param name="userFulName" value="${sessionScope.account.getFullName()}"/>
+        <jsp:param name="userImage" value="${sessionScope.account.getImage()}"/>
     </jsp:include>
     <!-- nav-header -->
     <!-- be-left-sidebar -->
-    <jsp:include page="/layout/left-sidebar.jsp"></jsp:include>
+    <jsp:include page="/layout/left-sidebar.jsp">
+        <jsp:param name="id" value="${sessionScope.account.getId()}"/>
+    </jsp:include>
     <!-- be-left-sidebar -->
 
     <!--profile-user-->

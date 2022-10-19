@@ -1,5 +1,6 @@
-package dao;
+package dao.impl;
 
+import dao.IProductDAO;
 import model.Product;
 import utils.AppUtils;
 
@@ -29,6 +30,21 @@ public class ProductDAO implements IProductDAO {
 
     private static final String CHECK_NAME_EXISTS = "SELECT * FROM product where name = ?";
     private static final String SEARCH_PRODUCT = "SELECT * FROM product WHERE id LIKE ? OR name LIKE ? OR description LIKE ? OR  price LIKE ? OR quantity LIKE ?;";
+    private static final String UPDATE_PRODUCT_QUANTITY = "UPDATE product SET quantity =? WHERE id =?;";
+
+    @Override
+    public void setUpdateProductQuantity(int quantity, String id){
+        try (Connection connection = connectionDAO.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_QUANTITY)) {
+            preparedStatement.setInt(1, quantity);
+            preparedStatement.setString(2, id);
+            System.out.println(this.getClass() + " setUpdateProductQuantity " + preparedStatement);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            AppUtils.printSQLException(e);
+        }
+    }
+
 
     @Override
     public void insertProduct(Product product) {

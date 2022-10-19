@@ -1,7 +1,10 @@
 package controller;
 
 import dao.*;
-import model.Product;
+import dao.impl.CustomerDAO;
+import dao.impl.ProductDAO;
+import dao.impl.RoleDAO;
+import dao.impl.UserDAO;
 import model.User;
 import utils.AppUtils;
 import utils.ValidateUtils;
@@ -12,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +29,9 @@ public class UserServlet extends HttpServlet {
     private final IUserDAO userDAO = UserDAO.getInstance();
     private final IRoleDAO roleDAO = RoleDAO.getInstance();
     private final IProductDAO productDAO = ProductDAO.getInstance();
+    private final ICustomerDAO customerDAO = CustomerDAO.getInstance();
 
+    @Override
     public void init() {
         if (this.getServletContext().getAttribute("listUser") == null) {
             this.getServletContext().setAttribute("listUser", userDAO.selectAllUser());
@@ -40,12 +46,19 @@ public class UserServlet extends HttpServlet {
         if (this.getServletContext().getAttribute("listProduct") == null) {
             this.getServletContext().setAttribute("listProduct", productDAO.selectAllProduct());
         }
+
+        if (this.getServletContext().getAttribute("listCustomer") == null) {
+            this.getServletContext().setAttribute("listCustomer", customerDAO.selectAllCustomer());
+        }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        if (session.getAttribute("account") == null) {
+            response.sendRedirect("/login?type=user");
+            return;
+        }
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
@@ -66,9 +79,25 @@ public class UserServlet extends HttpServlet {
             case "reset":
                 resetPass(request, response);
                 break;
+            case "changepass":
+                showChangePassForm(request, response);
+                break;
             default:
                 listUser(request, response);
                 break;
+        }
+    }
+
+    private void showChangePassForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User account = (User) session.getAttribute("account");
+        RequestDispatcher requestDispatcher;
+        if (userDAO.selectUser(account.getId()) == null) {
+            requestDispatcher = request.getRequestDispatcher("/WEB-INF/dashboard/404.jsp");
+            requestDispatcher.forward(request, response);
+        } else {
+            requestDispatcher = request.getRequestDispatcher("/WEB-INF/dashboard/user/changepass.jsp");
+            requestDispatcher.forward(request, response);
         }
     }
 
@@ -118,21 +147,15 @@ public class UserServlet extends HttpServlet {
     }
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher requestDispatcher;
         String id = request.getParameter("id");
         User user = userDAO.selectUser(id);
         if (user == null) {
-            request.setAttribute("error", "Nhân viên" + " ' " + id + " ' " + "không tồn tại");
-        } else {
-            if (user.getRole() == 1) {
-                request.setAttribute("error", "Không thể xóa tài khoản Admin");
-            } else {
-                userDAO.deleteUser(id);
-                request.setAttribute("message", "Xóa thành công!");
-            }
+            requestDispatcher = request.getRequestDispatcher("/WEB-INF/dashboard/404.jsp");
+            requestDispatcher.forward(request, response);
         }
-        updateListUser();
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/dashboard/user/list.jsp");
-        requestDispatcher.forward(request, response);
+        userDAO.deleteUser(id);
+        response.sendRedirect("/user");
     }
 
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -145,7 +168,7 @@ public class UserServlet extends HttpServlet {
         int recordsPerPage = 5;
         String q = "";
         int roleId = -1;
-        if(request.getParameter("recordsPerPage") != null){
+        if (request.getParameter("recordsPerPage") != null) {
             recordsPerPage = Integer.parseInt(request.getParameter("recordsPerPage"));
         }
         if (request.getParameter("q") != null) {
@@ -157,14 +180,14 @@ public class UserServlet extends HttpServlet {
         if (request.getParameter("page") != null)
             page = Integer.parseInt(request.getParameter("page"));
 
-        List<User> userList = userDAO.selectAllUsersPaggingFilter((page-1)*recordsPerPage, recordsPerPage, q, roleId);
+        List<User> userList = userDAO.selectAllUsersPaggingFilter((page - 1) * recordsPerPage, recordsPerPage, q, roleId);
         int noOfRecords = userDAO.getNoOfRecords();
         int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 
         request.setAttribute("listUser", userList);
         request.setAttribute("noOfPages", noOfPages);
         request.setAttribute("currentPage", page);
-        request.setAttribute("recordsPerPage",recordsPerPage);
+        request.setAttribute("recordsPerPage", recordsPerPage);
 
         request.setAttribute("q", q);
         request.setAttribute("roleId", roleId);
@@ -175,8 +198,6 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
@@ -191,7 +212,50 @@ public class UserServlet extends HttpServlet {
             case "search":
                 searchUser(request, response);
                 break;
+            case "changepass":
+                changePassword(request, response);
+                break;
         }
+    }
+
+    private void changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<String> errors = new ArrayList<>();
+        RequestDispatcher requestDispatcher;
+        String password = request.getParameter("password");
+        String passwordReEnter = request.getParameter("passwordReEnter");
+
+        if (password.trim().equals("")) {
+            errors.add("Mật khẩu không được để trống");
+        }
+        if (!ValidateUtils.isPasswordValid(password)) {
+            errors.add("Mật khẩu có độ dài 8-20 ký tự, chứa ít nhất 1 chữ cái viết hoa, viết thường, chữ số, ký t đặc biệt");
+        }
+
+        if (passwordReEnter.trim().equals("")) {
+            errors.add("Mật khẩu không được để trống");
+        }
+        if (!ValidateUtils.isPasswordValid(passwordReEnter)) {
+            errors.add("Mật khẩu có độ dài 8-20 ký tự, chứa ít nhất 1 chữ cái viết hoa, viết thường, chữ số, ký t đặc biệt");
+        }
+
+        if (!password.equals(passwordReEnter)) {
+            errors.add("Mật khẩu không trùng nhau");
+        }
+
+        if (errors.isEmpty()) {
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("account");
+            user.setPassword(password);
+            userDAO.updateUser(user);
+            request.setAttribute("message", "Đổi mật khẩu thành công");
+        } else {
+            request.setAttribute("errors", errors);
+            request.setAttribute("password",password);
+            request.setAttribute("passwordReEnter",passwordReEnter);
+        }
+        requestDispatcher = request.getRequestDispatcher("/WEB-INF/dashboard/user/changepass.jsp");
+        requestDispatcher.forward(request, response);
+
     }
 
     private void editUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

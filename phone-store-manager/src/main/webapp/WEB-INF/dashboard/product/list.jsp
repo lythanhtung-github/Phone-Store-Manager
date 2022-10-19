@@ -16,13 +16,15 @@
     <!-- nav-header -->
     <jsp:include page="/layout/nav-header.jsp">
         <jsp:param name="page" value="QUẢN LÝ SẢN PHẨM"/>
-        <jsp:param name="userFulName" value="Lý Thanh Tùng"/>
-        <jsp:param name="userImage" value="https://cdn-icons-png.flaticon.com/512/61/61205.png"/>
+        <jsp:param name="userFulName" value="${sessionScope.account.getFullName()}"/>
+        <jsp:param name="userImage" value="${sessionScope.account.getImage()}"/>
     </jsp:include>
     <!-- nav-header -->
 
     <!-- be-left-sidebar -->
-    <jsp:include page="/layout/left-sidebar.jsp"></jsp:include>
+    <jsp:include page="/layout/left-sidebar.jsp">
+        <jsp:param name="id" value="${sessionScope.account.getId()}"/>
+    </jsp:include>
     <!-- be-left-sidebar -->
     <!-- be-content -->
     <div class="be-content">
@@ -30,9 +32,9 @@
             <!--show-total-->
             <jsp:include page="/layout/show-total.jsp">
                 <jsp:param name="usersTotal" value="${applicationScope.listUser.size()}"/>
-                <jsp:param name="ordersTotal" value="1000"/>
+                <jsp:param name="ordersTotal" value="${applicationScope.listOrder.size()}"/>
                 <jsp:param name="productsTotal" value="${applicationScope.listProduct.size()}"/>
-                <jsp:param name="customersTotal" value="1000"/>
+                <jsp:param name="customersTotal" value="${applicationScope.listCustomer.size()}"/>
             </jsp:include>
             <!--show-total-->
             <c:if test="${requestScope.message!=null}">

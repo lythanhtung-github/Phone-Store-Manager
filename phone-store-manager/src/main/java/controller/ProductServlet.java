@@ -1,7 +1,13 @@
 package controller;
 
+import dao.ICustomerDAO;
+import dao.IOrderDAO;
 import dao.IProductDAO;
-import dao.ProductDAO;
+import dao.IUserDAO;
+import dao.impl.CustomerDAO;
+import dao.impl.OrderDAO;
+import dao.impl.ProductDAO;
+import dao.impl.UserDAO;
 import model.Product;
 import utils.ValidateUtils;
 
@@ -11,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -26,7 +33,10 @@ import java.util.Set;
 public class ProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    private final IUserDAO userDAO = UserDAO.getInstance();
     private final IProductDAO productDAO = ProductDAO.getInstance();
+    private final ICustomerDAO customerDAO = CustomerDAO.getInstance();
+    private final IOrderDAO orderDAO = OrderDAO.getInstance();
 
     public void init() {
         if (this.getServletContext().getAttribute("listProduct") == null) {
@@ -34,13 +44,22 @@ public class ProductServlet extends HttpServlet {
         } else {
             updateListProduct();
         }
+        if (this.getServletContext().getAttribute("listUser") == null) {
+            this.getServletContext().setAttribute("listUser", userDAO.selectAllUser());
+        }
+
+        if (this.getServletContext().getAttribute("listOrder") == null) {
+            this.getServletContext().setAttribute("listOrder", orderDAO.selectAllOrder());
+        }
+
+        if (this.getServletContext().getAttribute("listCustomer") == null) {
+            this.getServletContext().setAttribute("listCustomer", customerDAO.selectAllCustomer());
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("utf-8");
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
@@ -158,9 +177,12 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("utf-8");
+            throws IOException  {
+        HttpSession session = request.getSession();
+        if(session.getAttribute("account")==null){
+            response.sendRedirect("/login?type=user");
+            return;
+        }
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
