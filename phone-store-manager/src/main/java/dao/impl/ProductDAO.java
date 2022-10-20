@@ -45,7 +45,6 @@ public class ProductDAO implements IProductDAO {
         }
     }
 
-
     @Override
     public void insertProduct(Product product) {
         try (Connection connection = connectionDAO.getConnection();

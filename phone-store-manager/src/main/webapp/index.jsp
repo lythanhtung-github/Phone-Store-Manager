@@ -55,9 +55,9 @@
                                 <thead>
                                 <tr>
                                     <th class="text-center">Họ tên</th>
-                                    <th>Địa chỉ</th>
-                                    <th>SĐT</th>
-                                    <th>Đơn hàng đã duyệt</th>
+                                    <th class ="text-center">Địa chỉ</th>
+                                    <th class ="text-center">SĐT</th>
+                                    <th class ="text-center">Đơn hàng đã duyệt</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -97,9 +97,9 @@
                                 <thead>
                                 <tr>
                                     <th class="text-center">Họ tên</th>
-                                    <th>Địa chỉ</th>
-                                    <th>SĐT</th>
-                                    <th>Số đơn hàng</th>
+                                    <th class ="text-center">Địa chỉ</th>
+                                    <th class ="text-center">SĐT</th>
+                                    <th class ="text-center">Số đơn hàng</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -184,10 +184,10 @@
                             <table class="table table-striped table-borderless">
                                 <thead>
                                 <tr>
-                                    <th>Khách hàng</th>
-                                    <th>Địa chỉ</th>
-                                    <th>Đơn giá</th>
-                                    <th>Trạng thái</th>
+                                    <th class ="text-center">Khách hàng</th>
+                                    <th class ="text-center">Địa chỉ</th>
+                                    <th class ="text-center">Đơn giá</th>
+                                    <th class ="text-center">Trạng thái</th>
                                 </tr>
                                 </thead>
                                 <tbody class="no-border-x">

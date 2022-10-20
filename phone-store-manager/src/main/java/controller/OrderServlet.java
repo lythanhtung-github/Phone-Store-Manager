@@ -67,11 +67,11 @@ public class OrderServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if(session.getAttribute("account")==null){
-            response.sendRedirect("/login?type=user");
-            return;
-        }
+//        HttpSession session = request.getSession();
+//        if(session.getAttribute("account")==null){
+//            response.sendRedirect("/login?type=user");
+//            return;
+//        }
         String action = request.getParameter("action");
         if (action == null) {
             action = "";

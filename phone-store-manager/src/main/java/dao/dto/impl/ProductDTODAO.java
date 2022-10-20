@@ -36,6 +36,7 @@ public class ProductDTODAO implements IProductDTODAO {
                     "JOIN order_item\n" +
                     "ON product.id = order_item.product_id\n" +
                     "GROUP BY order_item.product_id\n" +
+                    "ORDER BY order_count DESC\n" +
                     "LIMIT 0,5;\n";
 
     @Override

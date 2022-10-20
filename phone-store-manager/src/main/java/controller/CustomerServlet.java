@@ -49,6 +49,37 @@ public class CustomerServlet extends HttpServlet {
             updateListCustomer();
         }
     }
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+//        HttpSession session = request.getSession();
+//        if(session.getAttribute("account")==null){
+//            response.sendRedirect("/login?type=user");
+//            return;
+//        }
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "";
+        }
+        try {
+            switch (action) {
+                case "edit":
+                    showEditForm(request, response);
+                    break;
+                case "delete":
+                    deleteCustomer(request, response);
+                    break;
+                case "view":
+                    showViewForm(request, response);
+                    break;
+                default:
+                    listCustomer(request, response);
+                    break;
+            }
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void updateListCustomer() {
         this.getServletContext().removeAttribute("listCustomer");
@@ -122,38 +153,6 @@ public class CustomerServlet extends HttpServlet {
         }
         requestDispatcher = request.getRequestDispatcher("/WEB-INF/dashboard/customer/edit.jsp");
         requestDispatcher.forward(request, response);
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        HttpSession session = request.getSession();
-        if(session.getAttribute("account")==null){
-            response.sendRedirect("/login?type=user");
-            return;
-        }
-        String action = request.getParameter("action");
-        if (action == null) {
-            action = "";
-        }
-        try {
-            switch (action) {
-                case "edit":
-                    showEditForm(request, response);
-                    break;
-                case "delete":
-                    deleteCustomer(request, response);
-                    break;
-                case "view":
-                    showViewForm(request, response);
-                    break;
-                default:
-                    listCustomer(request, response);
-                    break;
-            }
-        } catch (ServletException e) {
-            e.printStackTrace();
-        }
     }
 
     private void deleteCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -61,6 +61,33 @@
                     </div>
                 </div>
             </c:if>
+
+            <div class="card" id ="dialog"
+                 style="width: 500px; margin: auto; position: absolute; z-index: 2;
+                    top:20%; left:30%; background-color: #e9ecf1;
+                display: none">
+                <div class="card-header card-header-divider text-center">Thông báo</div>
+                <div class="card-body">
+                    <p id ="quick" class = "text-center">Bạn có chắc chắn muốn xóa không?</p>
+                    <p class="mt-6 mb-4 text-center">
+                        <a id = "yes"
+                           class="btn btn-space btn-success" type="button" style="color:white"> Đồng ý</a>
+                        <a id = "no" onclick="hideDialog()"
+                           class="btn btn-space btn-danger" type="button" style="color:white"> Thoát</a>
+                    </p>
+                </div>
+            </div>
+            <script>
+                function showDialog(id, name){
+                    document.querySelector("#quick").innerHTML = "Bạn có chắc chắn muốn xóa "+name+" không?"
+                    document.querySelector("#dialog").style.display = "block";
+                    document.querySelector("#yes").href = "/user?action=delete&id="+id;
+                }
+                function hideDialog(){
+                    document.querySelector("#dialog").style.display = "none";
+                }
+            </script>
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card card-table">
@@ -139,10 +166,15 @@
                                                class="btn btn-primary ">
                                                 <span class="mdi mdi-edit"></span>
                                             </a>
-                                            <a href="/customer?action=delete&id=${customer.getId()}"
-                                               type="button" class="btn btn-danger">
+<%--                                            <a href="/customer?action=delete&id=${customer.getId()}"--%>
+<%--                                               type="button" class="btn btn-danger">--%>
+<%--                                                <span class="mdi mdi-delete"></span>--%>
+<%--                                            </a>--%>
+
+                                            <button onclick="showDialog('${customer.getId()}','${customer.getFullName()}')"
+                                                    type="button" class="btn btn-danger">
                                                 <span class="mdi mdi-delete"></span>
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                 </c:forEach>
